@@ -44,9 +44,19 @@ class data_size(int):
     # also make a map from unit denominations to prefix
     prefix_units = dict(zip( tuple(unit_prefixes.values()),tuple(unit_prefixes.keys())) )
     nonstandard_units = dict(zip((m for m in IEC_prefixes.values()),(k[0] for k in IEC_prefixes.keys())))
-    def __bits_to_bytes__(self,b):
-        B = round(b/self.word_length)
-        if b % self.word_length > 0:
+    def __bits_to_bytes__(*args, **kwargs):
+        if 'word_length' in kwargs:
+            word_length = kwargs['word_length']
+        else:
+            word_length = 8
+        if len(args) == 1:
+            b = args[0]
+        if len(args) == 2:
+            self = args[0]
+            b = args[1]
+            word_length = self.word_length
+        B = round(b/word_length)
+        if b % word_length > 0:
             B += 1
         return int(B)
     def __init__(self,spec,**kwargs):
@@ -88,14 +98,14 @@ class data_size(int):
                     multiple = data_size.unit_prefixes[prefix]
                     break
         except TypeError:
-            raw = strip(spec)
-            bits = bytes * word_length
+            raw = spec
+            bits = int(raw) * word_length
         raw_number = float(raw)
         if unit == 'bits':
             bits = raw_number * multiple
         else:
             bits = raw_number * word_length * multiple
-        value = data_size.__bits_to_bytes__(data_size,bits)
+        value = data_size.__bits_to_bytes__(bits)
         return int.__new__(subclass,round(float(value + 0.5)))
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type format codes.
@@ -155,7 +165,6 @@ class data_size(int):
                     code = code[:-offset]
                     denomination = self.unit_prefixes[prefix]
                     break
-        print("denomination: {0}\nbase_unit: {1}\nfmt_mode: {2}".format(denomination,base_unit,fmt_mode))
         if denomination > 1 and not base_unit and fmt_mode != 'A':
             base_unit = 'B'
         value = float(self * multiple)/float(denomination)
