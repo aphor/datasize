@@ -1,3 +1,13 @@
+def __bits_to_bytes__(b, **kwargs):
+    if 'word_length' in kwargs:
+        word_length = kwargs['word_length']
+    else:
+        word_length = 8
+    B = round(b/word_length)
+    if b % word_length > 0:
+        B += 1
+    return int(B)
+
 class data_size(int):
     '''Integer subclass that handles units appropriate for data allocation.
     Adapts popular string representations of data sizes to integer values
@@ -44,21 +54,6 @@ class data_size(int):
     # also make a map from unit denominations to prefix
     prefix_units = dict(zip( tuple(unit_prefixes.values()),tuple(unit_prefixes.keys())) )
     nonstandard_units = dict(zip((m for m in IEC_prefixes.values()),(k[0] for k in IEC_prefixes.keys())))
-    def __bits_to_bytes__(*args, **kwargs):
-        if 'word_length' in kwargs:
-            word_length = kwargs['word_length']
-        else:
-            word_length = 8
-        if len(args) == 1:
-            b = args[0]
-        if len(args) == 2:
-            self = args[0]
-            b = args[1]
-            word_length = self.word_length
-        B = round(b/word_length)
-        if b % word_length > 0:
-            B += 1
-        return int(B)
     def __init__(self,spec,**kwargs):
         '''Usage: 
         min_heap = data_size('768Mib')
@@ -105,7 +100,7 @@ class data_size(int):
             bits = raw_number * multiple
         else:
             bits = raw_number * word_length * multiple
-        value = data_size.__bits_to_bytes__(bits)
+        value = __bits_to_bytes__(bits)
         return int.__new__(subclass,round(float(value + 0.5)))
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type format codes.
