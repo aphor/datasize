@@ -6,7 +6,7 @@ I need this class to provide parsing, arithmetic and comparison oprations, and f
 There is support for metric and IEC units in both bits and bytes and nonstandard abbreviated IEC units (for legacy Java -Xmx). There is support for variable word-lengths, but because I thought it would get confusing, converting between two different word lengths is not supported. The word length constructor keyword argument will allow converting counts of weird (actually non-byte) word or symbol bit lengths to bit rates, which can then be explicitly converted to standard 8-bit bytes.
 
 The really sweet feature that everyone (now everybody's me!) should love is the Python 3 string.format() support!
-
+```
 Help on method __format__ in module data_size.data_size:
 
 __format__(self, code) unbound data_size.data_size.data_size method
@@ -25,8 +25,10 @@ __format__(self, code) unbound data_size.data_size.data_size method
     ...
     YiB  Yobibytes  (1024**8)
     YB   Yottabytes (10**24)
-
+```
+```
 >>> from data_size_lib import data_size
 >>> 'My new {0:GB} SSD really only stores {1:.2GiB} of data.'.format(data_size('750GB'),data_size(data_size('750GB') * 0.8))
 'My new 750GB SSD really only stores 558.79GiB of data.'
 >>>
+```
