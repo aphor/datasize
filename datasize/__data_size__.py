@@ -23,7 +23,7 @@ class data_size(int):
     Objects constructed from non integers will be rounded up to the nearest
       byte.
     
-    Arithemtic methods inherit directly from int, and return int. This
+    Arithmetic methods inherit directly from int, and return int. This
       keeps this class smaller, and avoids unecessary constructor overhead.
     '''
     word_length = 8 #defaults to octet = byte for conversion to/from bits
