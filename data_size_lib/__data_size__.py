@@ -20,6 +20,8 @@ class data_size(int):
         bits: (suffix ending in 'b')
       like 10.4TB or 128kb
     The minimum granularity is in bytes, defined as 8 bit words by default.
+    Objects constructed from non integers will be rounded up to the nearest
+      byte.
     
     Arithemtic methods inherit directly from int, and return int. This
       keeps this class smaller, and avoids unecessary constructor overhead.
@@ -98,10 +100,15 @@ class data_size(int):
         raw_number = float(raw)
         if unit == 'bits':
             bits = raw_number * multiple
+            value = __bits_to_bytes__(bits)
         else:
             bits = raw_number * word_length * multiple
-        value = __bits_to_bytes__(bits)
-        return int.__new__(subclass,round(float(value + 0.5)))
+            value = raw_number * multiple
+        if type(value) == type(float(0)):
+            if not value.is_integer():
+                value = round(value + 0.5)
+            value = int(value)
+        return int.__new__(subclass,value)
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type format codes.
         Precision is ignored for integer multiples of the unit specified in the format code.
