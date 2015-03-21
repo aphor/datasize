@@ -80,7 +80,7 @@ class DataSize(int):
             if raw[-1] == DataSize.bit_suffix:
                 unit = 'bits'
             raw = raw.rstrip(DataSize.bit_suffix).rstrip(DataSize.byte_suffix)
-            units = DataSize.unit_prefixes.keys()
+            units = list(DataSize.unit_prefixes.keys())
             units.sort(reverse=True)
             for prefix in units:
                 offset = len(prefix)
