@@ -128,6 +128,10 @@ class DataSize(__data_size_super__):
         ...
         YiB  Yobibytes  (1024**8)
         YB   Yottabytes (10**24)
+        
+        >>> from datasize import DataSize
+        >>> 'My new {:GB} SSD really only stores {:.2GiB} of data.'.format(DataSize('750GB'),DataSize(DataSize('750GB') * 0.8))
+        'My new 750GB SSD really only stores 558.79GiB of data.'
         '''
         base_unit = ''
         prefix = ''
@@ -182,12 +186,22 @@ class DataSize(__data_size_super__):
         
         if value.is_integer():  # emit integers if we can do it cleanly
             code = code.split('.', 1)[0]  # if there is precision in the code, strip it
-            code = '{c}{n}'.format(c=code[0], n=int(code) - suffix_rpad_spaces)
+            if code:
+                code = '{c}{n}'.format(c=code[0], n=(int(code) - suffix_rpad_spaces))
             code += 'd'
             cast = lambda x: int(x)
         else:
-            fpad, fprecision = code.split('.',1)
-            code = '{c}{pad}.{prec}'.format(c=fpad[0], pad=int(fpad) - suffix_rpad_spaces, prec=fprecision)
+            if code and '.' in code:
+                fpad, fprecision = code.split('.',1)
+                if fpad:
+                    padchar = fpad[0]
+                else:
+                    padchar = ''
+                if fpad:
+                    npad = int(fpad) - suffix_rpad_spaces
+                else:
+                    npad = ''
+                code = '{c}{pad}.{prec}'.format(c=padchar, pad=npad, prec=fprecision)
             code += 'f'
             cast = lambda x: x
         unit_suffix_template = '{{:<{n}}}'.format(n=suffix_rpad_spaces)

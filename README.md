@@ -28,7 +28,6 @@ __format__(self, code) unbound datasize.__data_size__.DataSize method
 ```
 ```
 >>> from datasize import DataSize
->>> 'My new {0:GB} SSD really only stores {1:.2GiB} of data.'.format(DataSize('750GB'),data_size(DataSize('750GB') * 0.8))
+>>> 'My new {:GB} SSD really only stores {:.2GiB} of data.'.format(DataSize('750GB'),DataSize(DataSize('750GB') * 0.8))
 'My new 750GB SSD really only stores 558.79GiB of data.'
->>>
 ```
