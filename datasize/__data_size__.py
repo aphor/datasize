@@ -181,7 +181,6 @@ class DataSize(int):
             code += 'f'
             cast = lambda x: x
         unit_suffix_template = '{{:<{n}}}'.format(n=suffix_rpad_spaces)
-        print(unit_suffix_template)
         unit_output_suffix = unit_suffix_template.format(prefix + base_unit)
         format_parms = {'code': code, 'unit': unit_output_suffix}
         template = '{{:{code}}}{unit}'.format(**format_parms)
