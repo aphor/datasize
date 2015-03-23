@@ -134,6 +134,7 @@ class DataSize(__data_size_super__):
         denomination = 1
         multiple = 1
         auto_modes = ('a', 'A')
+        suffix_rpad_spaces = 0
         prefix_units = self.prefix_units
         if not code or code[-1] == 'a':
             fmt_mode = 'a'
@@ -146,8 +147,10 @@ class DataSize(__data_size_super__):
         if fmt_mode in auto_modes:  # automatically choose a denomination/unit
             if fmt_mode == 'A':
                 prefix_units = self.nonstandard_units
+                suffix_rpad_spaces = max([len(k) for k in prefix_units.values()])
             else:
                 base_unit = 'B'
+                suffix_rpad_spaces = max([len(k) for k in prefix_units.values()]) + 1
             code = code.rstrip(''.join(auto_modes))
             denominations = list(prefix_units.keys())
             denominations.sort(reverse=True)
@@ -159,6 +162,7 @@ class DataSize(__data_size_super__):
         else:
             if code[-1] in ('b', 'B'):
                 base_unit = code[-1]
+                suffix_rpad_spaces += 1
                 code = code[:-1]  # eat the base unit
                 if base_unit == 'b':
                     multiple = self.word_length
@@ -168,6 +172,7 @@ class DataSize(__data_size_super__):
             for prefix in units:
                 offset = len(prefix)
                 if code[-offset:] == prefix:
+                    suffix_rpad_spaces += offset
                     code = code[:-offset]
                     denomination = self.unit_prefixes[prefix]
                     break
@@ -176,10 +181,13 @@ class DataSize(__data_size_super__):
         value = float(self * multiple)/float(denomination)
         
         if value.is_integer():  # emit integers if we can do it cleanly
+            code = code.split('.', 1)[0]  # if there is precision in the code, strip it
+            code = '{c}{n}'.format(c=code[0], n=int(code) - suffix_rpad_spaces)
             code += 'd'
             cast = lambda x: int(x)
-            code = code.split('.', 1)[0]  # if there is precision in the code, strip it`
         else:
+            fpad, fprecision = code.split('.',1)
+            code = '{c}{pad}.{prec}'.format(c=fpad[0], pad=int(fpad) - suffix_rpad_spaces, prec=fprecision)
             code += 'f'
             cast = lambda x: x
         unit_suffix_template = '{{:<{n}}}'.format(n=suffix_rpad_spaces)
