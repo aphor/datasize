@@ -4,7 +4,14 @@ def __bits_to_bytes__(b, word_length=8):
     B = ceil(b/word_length)
     return int(B)
 
-class DataSize(int):
+import sys
+
+if sys.version_info[0] < 3:
+    __data_size_super__ = long
+else:
+    __data_size_super__ = int
+
+class DataSize(__data_size_super__):
     '''Integer subclass that handles units appropriate for data allocation.
     Adapts popular string representations of data sizes to integer values
     supporting arithmetic and alternate string representations.
@@ -21,6 +28,9 @@ class DataSize(int):
     
     Arithmetic methods inherit directly from int, and return int. This
       keeps this class smaller, and avoids unecessary constructor overhead.
+    
+    WARNING: in Python 2, DataSize is a subclass of long to avoid overflows
+      on large values. Upgrade!
     '''
     word_length = 8  # defaults to octet = byte for conversion to/from bits
     bit_suffix, byte_suffix = 'b', 'B'
@@ -100,8 +110,8 @@ class DataSize(int):
             value = raw_number * multiple
         if type(value) == type(float(0)):
             value = int(ceil(value))
-        return int.__new__(subclass, value)
-        
+        return __data_size_super__.__new__(subclass, value)
+
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type format codes.
         Precision is ignored for integer multiples of the unit specified in the format code.
@@ -172,7 +182,8 @@ class DataSize(int):
         else:
             code += 'f'
             cast = lambda x: x
-        format_parms = {'code': code, 'unit': prefix + base_unit}
+        unit_suffix_template = '{{:<{n}}}'.format(n=suffix_rpad_spaces)
+        unit_output_suffix = unit_suffix_template.format(prefix + base_unit)
+        format_parms = {'code': code, 'unit': unit_output_suffix}
         template = '{{:{code}}}{unit}'.format(**format_parms)
         return template.format(cast(float(value)))
-
