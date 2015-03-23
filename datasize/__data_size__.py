@@ -136,6 +136,8 @@ class DataSize(int):
         if fmt_mode in auto_modes:  # automatically choose a denomination/unit
             if fmt_mode == 'A':
                 prefix_units = self.nonstandard_units
+            else:
+                base_unit = 'B'
             code = code.rstrip(''.join(auto_modes))
             denominations = list(prefix_units.keys())
             denominations.sort(reverse=True)
