@@ -4,7 +4,14 @@ def __bits_to_bytes__(b, word_length=8):
     B = ceil(b/word_length)
     return int(B)
 
-class DataSize(int):
+import sys
+
+if sys.version_info[0] < 3:
+    __data_size_super__ = long
+else:
+    __data_size_super__ = int
+
+class DataSize(__data_size_super__):
     '''Integer subclass that handles units appropriate for data allocation.
     Adapts popular string representations of data sizes to integer values
     supporting arithmetic and alternate string representations.
@@ -21,6 +28,9 @@ class DataSize(int):
     
     Arithmetic methods inherit directly from int, and return int. This
       keeps this class smaller, and avoids unecessary constructor overhead.
+    
+    WARNING: in Python 2, DataSize is a subclass of long to avoid overflows
+      on large values. Upgrade!
     '''
     word_length = 8  # defaults to octet = byte for conversion to/from bits
     bit_suffix, byte_suffix = 'b', 'B'
@@ -100,8 +110,8 @@ class DataSize(int):
             value = raw_number * multiple
         if type(value) == type(float(0)):
             value = int(ceil(value))
-        return int.__new__(subclass, value)
-        
+        return __data_size_super__.__new__(subclass, value)
+
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type format codes.
         Precision is ignored for integer multiples of the unit specified in the format code.
@@ -118,12 +128,17 @@ class DataSize(int):
         ...
         YiB  Yobibytes  (1024**8)
         YB   Yottabytes (10**24)
+        
+        >>> from datasize import DataSize
+        >>> 'My new {:GB} SSD really only stores {:.2GiB} of data.'.format(DataSize('750GB'),DataSize(DataSize('750GB') * 0.8))
+        'My new 750GB SSD really only stores 558.79GiB of data.'
         '''
         base_unit = ''
         prefix = ''
         denomination = 1
         multiple = 1
         auto_modes = ('a', 'A')
+        suffix_rpad_spaces = 0
         prefix_units = self.prefix_units
         if not code or code[-1] == 'a':
             fmt_mode = 'a'
@@ -136,6 +151,10 @@ class DataSize(int):
         if fmt_mode in auto_modes:  # automatically choose a denomination/unit
             if fmt_mode == 'A':
                 prefix_units = self.nonstandard_units
+                suffix_rpad_spaces = max([len(k) for k in prefix_units.values()])
+            else:
+                base_unit = 'B'
+                suffix_rpad_spaces = max([len(k) for k in prefix_units.values()]) + 1
             code = code.rstrip(''.join(auto_modes))
             denominations = list(prefix_units.keys())
             denominations.sort(reverse=True)
@@ -147,6 +166,7 @@ class DataSize(int):
         else:
             if code[-1] in ('b', 'B'):
                 base_unit = code[-1]
+                suffix_rpad_spaces += 1
                 code = code[:-1]  # eat the base unit
                 if base_unit == 'b':
                     multiple = self.word_length
@@ -156,6 +176,7 @@ class DataSize(int):
             for prefix in units:
                 offset = len(prefix)
                 if code[-offset:] == prefix:
+                    suffix_rpad_spaces += offset
                     code = code[:-offset]
                     denomination = self.unit_prefixes[prefix]
                     break
@@ -164,13 +185,27 @@ class DataSize(int):
         value = float(self * multiple)/float(denomination)
         
         if value.is_integer():  # emit integers if we can do it cleanly
+            code = code.split('.', 1)[0]  # if there is precision in the code, strip it
+            if code:
+                code = '{c}{n}'.format(c=code[0], n=(int(code) - suffix_rpad_spaces))
             code += 'd'
             cast = lambda x: int(x)
-            code = code.split('.', 1)[0]  # if there is precision in the code, strip it`
         else:
+            if code and '.' in code:
+                fpad, fprecision = code.split('.',1)
+                if fpad:
+                    padchar = fpad[0]
+                else:
+                    padchar = ''
+                if fpad:
+                    npad = int(fpad) - suffix_rpad_spaces
+                else:
+                    npad = ''
+                code = '{c}{pad}.{prec}'.format(c=padchar, pad=npad, prec=fprecision)
             code += 'f'
             cast = lambda x: x
-        format_parms = {'code': code, 'unit': prefix + base_unit}
+        unit_suffix_template = '{{:<{n}}}'.format(n=suffix_rpad_spaces)
+        unit_output_suffix = unit_suffix_template.format(prefix + base_unit)
+        format_parms = {'code': code, 'unit': unit_output_suffix}
         template = '{{:{code}}}{unit}'.format(**format_parms)
         return template.format(cast(float(value)))
-
