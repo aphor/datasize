@@ -1,1 +1,1 @@
-from datasize.__data_size__ import *
+from datasize.__datasize__ import *
