@@ -1,4 +1,4 @@
-from datasize.__data_size__ import DataSize
+from datasize.__datasize__ import DataSize
 
 def value_equivalence_check(a,b):
     assert a == b
