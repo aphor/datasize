@@ -27,5 +27,5 @@ if __name__ == '__main__':
     for i in [{'n':n,'p':p,'b':b} for n in example_values for p in prefixes for b in bases]:
         i['DS'] = DataSize('{n}{p}{b}'.format(**i))
         fmt_code_str = '"{{DS:{}}}"'.format(__default_autoformat__)
-        print('\t'.join(('','({n:6},','"{p}",','"{b}"):',fmt_code_str,',')).format(**i))
+        print('\t'.join(('','({n},','"{p}",','"{b}"):',fmt_code_str,',')).format(**i))
     print('}')
