@@ -10,5 +10,10 @@ python:
 # command to install dependencies
 install:
   - "pip install ."
+  - "pip install coveralls"
 # command to run tests
-script: nosetests
+script:
+  coverage run --source=datasize nosetests
+# command to run on successful builds
+after_success:
+  coveralls
