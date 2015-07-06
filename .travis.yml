@@ -13,7 +13,7 @@ install:
   - "pip install coveralls"
 # command to run tests
 script:
-  coverage run --source=datasize nosetests
+  nosetests  --with-coverage --cover-package=datasize
 # command to run on successful builds
 after_success:
   coveralls
