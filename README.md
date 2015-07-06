@@ -33,3 +33,4 @@ __format__(self, code) unbound datasize.__datasize__.DataSize method
 >>> 'My new {:GB} SSD really only stores {:.2GiB} of data.'.format(DataSize('750GB'),DataSize(DataSize('750GB') * 0.8))
 'My new 750GB SSD really only stores 558.79GiB of data.'
 ```
+[![Coverage Status](https://coveralls.io/repos/aphor/datasize/badge.svg)](https://coveralls.io/r/aphor/datasize)
