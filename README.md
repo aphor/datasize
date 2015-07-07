@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/aphor/datasize.svg?branch=master)](https://travis-ci.org/aphor/datasize) [![Coverage Status](https://coveralls.io/repos/aphor/datasize/badge.svg?branch=master)](https://coveralls.io/r/aphor/datasize?branch=master)
 # DataSize
 Python integer subclass to handle arithmetic and formatting of integers with data size units
 
@@ -33,4 +34,3 @@ __format__(self, code) unbound datasize.__datasize__.DataSize method
 >>> 'My new {:GB} SSD really only stores {:.2GiB} of data.'.format(DataSize('750GB'),DataSize(DataSize('750GB') * 0.8))
 'My new 750GB SSD really only stores 558.79GiB of data.'
 ```
-[![Build Status](https://travis-ci.org/aphor/datasize.svg?branch=master)](https://travis-ci.org/aphor/datasize) [![Coverage Status](https://coveralls.io/repos/aphor/datasize/badge.svg)](https://coveralls.io/r/aphor/datasize)
