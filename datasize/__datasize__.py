@@ -204,13 +204,11 @@ class DataSize(__data_size_super__):
                                         c=code[0],
                                         n=(int(code) - suffix_rpad_spaces))
             code += 'd'
-            
-            def cast(x):
-                return int(x)
+            def cast(x): return int(x)
 
         else:
             if code and '.' in code:
-                fpad, fprecision = code.split('.',1)
+                fpad, fprecision = code.split('.', 1)
                 if fpad:
                     padchar = fpad[0]
                 else:
@@ -224,9 +222,7 @@ class DataSize(__data_size_super__):
                                                 pad=npad,
                                                 prec=fprecision)
             code += 'f'
-            
-            def cast(x):
-                return x
+            def cast(x): return x
 
         unit_suffix_template = '{{:<{n}}}'.format(n=suffix_rpad_spaces)
         unit_output_suffix = unit_suffix_template.format(prefix + base_unit)
