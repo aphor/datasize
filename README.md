@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/aphor/datasize.svg?branch=master)](https://travis-ci.org/aphor/datasize) [![Coverage Status](https://coveralls.io/repos/aphor/datasize/badge.svg?branch=master)](https://coveralls.io/r/aphor/datasize?branch=master)
 # DataSize
 Python integer subclass to handle arithmetic and formatting of integers with data size units
 

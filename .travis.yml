@@ -1,0 +1,19 @@
+language: python
+python:
+  - "pypy"
+  - "pypy3"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "nightly"
+# command to install dependencies
+install:
+  - "pip install ."
+  - "pip install coveralls"
+# command to run tests
+script:
+  nosetests  --with-coverage --cover-package=datasize
+# command to run on successful builds
+after_success:
+  coveralls
