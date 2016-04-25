@@ -8,12 +8,12 @@ def __bits_to_bytes__(b, word_length=8):
 
 
 if sys.version_info[0] < 3:
-    __data_size_super__ = long
+    __DataSize_super__ = long
 else:
-    __data_size_super__ = int
+    __DataSize_super__ = int
 
 
-class DataSize(__data_size_super__):
+class DataSize(__DataSize_super__):
     '''Integer subclass that handles units appropriate for data allocation.
     Adapts popular string representations of data sizes to integer values
     supporting arithmetic and alternate string representations.
