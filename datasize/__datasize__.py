@@ -117,7 +117,7 @@ class DataSize(__DataSize_super__):
             bits = raw_number * word_length * multiple
             value = raw_number * multiple
         if isinstance(value, float):
-            value = int(ceil(value))
+            value = __DataSize_super__(ceil(value))
         return __DataSize_super__(subclass, value)
 
     def __format__(self, code):
