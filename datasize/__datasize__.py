@@ -118,7 +118,7 @@ class DataSize(__DataSize_super__):
             value = raw_number * multiple
         if isinstance(value, float):
             value = int(ceil(value))
-        return __data_size_super__.__new__(subclass, value)
+        return __DataSize_super__(subclass, value)
 
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type
