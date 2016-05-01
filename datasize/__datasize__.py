@@ -109,6 +109,7 @@ class DataSize(__DataSize_super__):
         except TypeError:
             raw = spec
             bits = int(raw) * word_length
+        
         raw_number = float(raw)
         if unit == 'bits':
             bits = raw_number * multiple
@@ -116,9 +117,11 @@ class DataSize(__DataSize_super__):
         else:
             bits = raw_number * word_length * multiple
             value = raw_number * multiple
+        
         if isinstance(value, float):
-            value = __DataSize_super__(ceil(value))
-        return __DataSize_super__(subclass, value)
+            value = ceil(value)
+        
+        return __DataSize_super__.__new__(DataSize, value)
 
     def __format__(self, code):
         '''formats as a decimal number, but recognizes data units as type
