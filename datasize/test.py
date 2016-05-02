@@ -1,9 +1,6 @@
 from datasize.__datasize__ import DataSize
 __default_autoformat__ = ' 20.4a'
 
-def value_equivalence_check(a,b):
-    assert a == b
-
 def string_format_check(a,b,c):
     assert a.format(DataSize(b)) == c
 
@@ -39,5 +36,4 @@ if __name__ == '__main__':
         i['DS'] = DataSize('{n}{b}'.format(**i))
         fmt_code_str = '"{{DS:{}}}"'.format(__default_autoformat__)
         print('\t'.join(('','({n},','"{p}",','"{b}"):',fmt_code_str,',')).format(**i))
-    
     print('}')
