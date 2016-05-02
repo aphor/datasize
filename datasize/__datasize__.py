@@ -36,6 +36,7 @@ class DataSize(__DataSize_super__):
     '''
     word_length = 8  # defaults to octet = byte for conversion to/from bits
     bit_suffix, byte_suffix = 'b', 'B'
+    autoformat_prefixes = ('a', 'A')
     metric_prefixes = {
         # metric/decimal unit prefixes
         'k': 1000,
@@ -109,7 +110,8 @@ class DataSize(__DataSize_super__):
         except TypeError:
             raw = spec
             bits = int(raw) * word_length
-        
+        if raw[-1] in DataSize.autoformat_prefixes: #rstrip autoformat_prefixes
+            raw = raw[:-1]
         raw_number = float(raw)
         if unit == 'bits':
             bits = raw_number * multiple
@@ -149,7 +151,7 @@ class DataSize(__DataSize_super__):
         prefix = ''
         denomination = 1
         multiple = 1
-        auto_modes = ('a', 'A')
+        auto_modes = self.autoformat_prefixes
         suffix_rpad_spaces = 0
         prefix_units = self.prefix_units
         if not code or code[-1] == 'a':
