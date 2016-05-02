@@ -14,6 +14,11 @@ def test_parse_and_format():
         parsed_string = '{}{}{}'.format(*example)
         format_code_str ='{{:{}}}'.format(__default_autoformat__)
         yield string_format_check, format_code_str, parsed_string, formatted_string
+        
+def test_autoformat_defaults():
+    yield string_format_check, '{:A}', '1024', '1k'
+    yield string_format_check, '{}', '1024', '1kiB'
+    yield string_format_check, '{}', '1', '1B  ' # todo: https://github.com/aphor/datasize/issues/6
 
 example_values = (1, 2, 4, 16, 64, 1024, 65536, 0.1, 0.25, 0.125, 56.65)
 prefixes = list(DataSize.unit_prefixes.keys())
@@ -34,4 +39,5 @@ if __name__ == '__main__':
         i['DS'] = DataSize('{n}{b}'.format(**i))
         fmt_code_str = '"{{DS:{}}}"'.format(__default_autoformat__)
         print('\t'.join(('','({n},','"{p}",','"{b}"):',fmt_code_str,',')).format(**i))
+    
     print('}')

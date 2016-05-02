@@ -195,8 +195,6 @@ class DataSize(__DataSize_super__):
                     code = code[:-offset]
                     denomination = self.unit_prefixes[prefix]
                     break
-        if denomination > 1 and not base_unit and fmt_mode != 'A':
-            base_unit = 'B'
         value = float(self * multiple)/float(denomination)
 
         if value.is_integer():  # emit integers if we can do it cleanly
