@@ -1,8 +1,13 @@
 from datasize.__datasize__ import DataSize
 __default_autoformat__ = ' 20.4a'
+import sys
 
 def string_format_check(a,b,c):
-    assert a.format(DataSize(b)) == c
+    try:
+        assert a.format(DataSize(b)) == c
+    except AssertionError:
+        sys.stderr.write("\nAssertionError: {} != {}\n".format(a.format(DataSize(b)), c))
+        raise
 
 def test_parse_and_format():
     from datasize.__expected_test_results__ import parse_and_format_results
@@ -15,6 +20,7 @@ def test_parse_and_format():
 def test_autoformat_defaults():
     yield string_format_check, '{:A}', '1024', '1k'
     yield string_format_check, '{}', '1024', '1kiB'
+    yield string_format_check, '{:B}', '1024', '1024B'
     yield string_format_check, '{}', '1', '1B  ' # todo: https://github.com/aphor/datasize/issues/6
 
 example_values = (1, 2, 4, 16, 64, 1024, 65536, 0.1, 0.25, 0.125, 56.65)

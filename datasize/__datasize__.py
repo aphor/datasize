@@ -195,8 +195,9 @@ class DataSize(__DataSize_super__):
                     code = code[:-offset]
                     denomination = self.unit_prefixes[prefix]
                     break
+                prefix, denomination = '', 1
         value = float(self * multiple)/float(denomination)
-
+        
         if value.is_integer():  # emit integers if we can do it cleanly
             code = code.split('.', 1)[0]  # precision in the code? strip it
             if code:
