@@ -94,22 +94,19 @@ class DataSize(__DataSize_super__):
         word_length = int(kwargs.get('word_length', DataSize.word_length))
         unit = 'bytes'
         multiple = 1
-        try:
-            raw = spec[:]
-            if raw[-1] == DataSize.bit_suffix:
-                unit = 'bits'
-            raw = raw.rstrip(DataSize.bit_suffix).rstrip(DataSize.byte_suffix)
-            units = list(DataSize.unit_prefixes.keys())
-            units.sort(reverse=True)
-            for prefix in units:
-                offset = len(prefix)
-                if raw[-offset:] == prefix:
-                    raw = raw[:-offset]
-                    multiple = DataSize.unit_prefixes[prefix]
-                    break
-        except TypeError:
-            raw = spec
-            bits = int(raw) * word_length
+        raw = spec[:]
+        if raw[-1] == DataSize.bit_suffix:
+            unit = 'bits'
+        raw = raw.rstrip(DataSize.bit_suffix).rstrip(DataSize.byte_suffix)
+        units = list(DataSize.unit_prefixes.keys())
+        units.sort(reverse=True)
+        for prefix in units:
+            offset = len(prefix)
+            if raw[-offset:] == prefix:
+                raw = raw[:-offset]
+                multiple = DataSize.unit_prefixes[prefix]
+                break
+        
         if raw[-1] in DataSize.autoformat_prefixes: #rstrip autoformat_prefixes
             raw = raw[:-1]
         raw_number = float(raw)
