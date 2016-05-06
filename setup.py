@@ -2,7 +2,7 @@ from setuptools import setup
 setup(
   name = 'datasize',
   packages = ['datasize'],
-  version = '0.2',
+  version = '0.3',
   description = 'Python integer subclass to handle arithmetic and formatting of integers with data size units',
   author = 'Jeremy McMillan',
   author_email = 'jeremy.mcmillan@gmail.com',
