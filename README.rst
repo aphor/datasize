@@ -32,7 +32,7 @@ DataSize objects can be formatted using custom format codes via Python string.fo
         ...
         YiB  Yobibytes  (1024**8)
         YB   Yottabytes (10**24)
-Example::
+Example
 *********
     >>> from datasize import DataSize
     >>> 'My new {:GB} SSD really only stores {:.2GiB} of data.'.format(DataSize('750GB'),DataSize(DataSize('750GB') * 0.8))
