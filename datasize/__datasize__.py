@@ -3,6 +3,23 @@ import sys
 
 
 def __bits_to_bytes__(b, word_length=8):
+    '''count bytes filled for a number of bits with a given or default (8)
+           bit word length
+        >>> bits_to_bytes(4)
+        >>> 1
+
+        >>> bits_to_bytes(4, word_length=4)
+        >>> 1
+
+        >>> bits_to_bytes(256)
+        >>> 32
+
+        >>> bits_to_bytes(256, word_length=16)
+        >>> 16
+
+        >>> bits_to_bytes(1024, word_length=4)
+        >>> 256
+    '''
     B = ceil(b/word_length)
     return int(B)
 
